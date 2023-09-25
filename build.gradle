@@ -17,7 +17,7 @@ foxloader {
     modId = "betterchatmod"
     modName = "Better Chat Mod"
     modVersion = project.version
-    modDesc = "A mod that aims to fix and improve the chat in ReIndev (e.g. by enlarging the chat history)"
+    modDesc = "A mod that aims to fix and improve the chat in ReIndev (e.g. by extending the chat history)"
     clientMod = "com.auracat.betterchatmod.client.BetterChatModClient"
     serverMod = "com.auracat.betterchatmod.server.BetterChatModServer"
     // Development tools don't like that both client and server define

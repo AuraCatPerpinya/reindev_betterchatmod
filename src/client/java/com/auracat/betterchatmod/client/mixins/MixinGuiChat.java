@@ -33,7 +33,8 @@ public class MixinGuiChat extends GuiScreen implements IWithChatInputLogs, IWith
         if (eventKey == Keyboard.KEY_ESCAPE) {
             currentCursorIndex = cursor.setIndex(-1);
         } else if (eventKey == Keyboard.KEY_RETURN && this.chat.isEnabled) {
-                inputLogs.addMessage(this.chat.getText());
+            currentCursorIndex = cursor.setIndex(-1);
+            inputLogs.addMessage(this.chat.getText());
         } else if (eventKey == Keyboard.KEY_UP) {
             if (currentCursorIndex == -1) {
                 this.betterChatMod$chatInputLogsCursor.setOriginallyTyped(this.chat.getText());
@@ -46,12 +47,15 @@ public class MixinGuiChat extends GuiScreen implements IWithChatInputLogs, IWith
             this.chat.setText(inputLogs.list.get(currentCursorIndex));
 
         } else if (eventKey == Keyboard.KEY_DOWN) {
+            int previousCursorIndex = cursor.getIndex();
             currentCursorIndex = cursor.decrementIndex();
+
             if (currentCursorIndex < -1) {
                 currentCursorIndex = cursor.incrementIndex();
             }
 
-            if (currentCursorIndex == -1) {
+            if (currentCursorIndex == -1 && previousCursorIndex == -1) {
+            } else if (currentCursorIndex == -1) {
                 this.chat.setText(cursor.getOriginallyTyped());
             } else {
                 this.chat.setText(inputLogs.list.get(currentCursorIndex));
