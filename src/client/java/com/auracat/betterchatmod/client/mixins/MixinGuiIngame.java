@@ -1,25 +1,15 @@
 package com.auracat.betterchatmod.client.mixins;
 
 import com.auracat.betterchatmod.client.IMaxSizeChatMessageList;
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.client.gui.ChatLine;
 import net.minecraft.src.client.gui.Gui;
 import net.minecraft.src.client.gui.GuiIngame;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-import java.util.List;
 
 @Mixin(GuiIngame.class)
 public abstract class MixinGuiIngame extends Gui implements IMaxSizeChatMessageList {
-    @Shadow
-    private Minecraft mc;
-    @Shadow
-    public List<ChatLine> chatMessageList;
-
     @ModifyConstant(method = "addChatMessage", constant = @Constant(intValue = 50))
     private int addChatMessageMixin(int constant) {
         return this.betterChatMod$maxSizeChatMessageList;
