@@ -51,7 +51,6 @@ public class MixinGuiChat extends GuiScreen implements IWithChatInputLogs, IWith
                 }
 
                 if (currentCursorIndex != previousCursorIndex) {
-                    this.chat.setCursorPosition(this.chat.getText().length());
                     this.chat.setText(inputLogs.list.get(currentCursorIndex));
                 }
 
@@ -64,12 +63,18 @@ public class MixinGuiChat extends GuiScreen implements IWithChatInputLogs, IWith
 
                 if (currentCursorIndex == -1 && previousCursorIndex == -1) {
                 } else if (currentCursorIndex == -1) {
-                    this.chat.setCursorPosition(this.chat.getText().length());
                     this.chat.setText(cursor.getOriginallyTyped());
                 } else {
-                    this.chat.setCursorPosition(this.chat.getText().length());
                     this.chat.setText(inputLogs.list.get(currentCursorIndex));
                 }
+            } else if (eventKey == Keyboard.KEY_HOME) {
+                this.chat.setCursorPosition(0);
+            } else if (eventKey == Keyboard.KEY_END) {
+                this.chat.setCursorPosition(this.chat.getText().length());
+            }
+
+            if (currentCursorIndex != previousCursorIndex) {
+                this.chat.setCursorPosition(this.chat.getText().length());
             }
         }
 
