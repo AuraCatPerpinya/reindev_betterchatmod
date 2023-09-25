@@ -1,9 +1,9 @@
 package com.auracat.betterchatmod.client.mixins;
 
-import com.auracat.betterchatmod.client.ChatInputLogs;
-import com.auracat.betterchatmod.client.ChatInputLogsCursor;
-import com.auracat.betterchatmod.client.IWithChatInputLogs;
-import com.auracat.betterchatmod.client.IWithChatInputLogsCursor;
+import com.auracat.betterchatmod.client.PastSentMessages;
+import com.auracat.betterchatmod.client.PastSentMessagesCursor;
+import com.auracat.betterchatmod.client.IWithPastSentMessages;
+import com.auracat.betterchatmod.client.IWithPastSentMessagesCursor;
 import net.minecraft.src.client.gui.GuiChat;
 import net.minecraft.src.client.gui.GuiScreen;
 import net.minecraft.src.client.gui.GuiTextField;
@@ -16,18 +16,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiChat.class)
-public class MixinGuiChat extends GuiScreen implements IWithChatInputLogs, IWithChatInputLogsCursor {
+public class MixinGuiChat extends GuiScreen implements IWithPastSentMessages, IWithPastSentMessagesCursor {
     @Shadow
     public GuiTextField chat;
 
     @Unique
-    ChatInputLogs betterChatMod$chatInputLogs = ((IWithChatInputLogs) this.mc).betterChatMod$chatInputLogs;
+    PastSentMessages betterChatMod$pastSentMessages = ((IWithPastSentMessages) this.mc).betterChatMod$pastSentMessages;
 
     @Inject(method = "keyTyped", at = @At(value = "HEAD"))
     public void keyTypedMixin(char eventChar, int eventKey, CallbackInfo ci) {
         if (this.chat.isEnabled) {
-            ChatInputLogsCursor cursor = this.betterChatMod$chatInputLogsCursor;
-            ChatInputLogs inputLogs = this.betterChatMod$chatInputLogs;
+            PastSentMessagesCursor cursor = this.betterChatMod$pastSentMessagesCursor;
+            PastSentMessages pastSentMessages = this.betterChatMod$pastSentMessages;
 
             int previousCursorIndex = cursor.getIndex();
             int currentCursorIndex = cursor.getIndex();
@@ -39,19 +39,19 @@ public class MixinGuiChat extends GuiScreen implements IWithChatInputLogs, IWith
 
                 String message = this.chat.getText().trim();
                 if (message.length() > 0) {
-                    inputLogs.addMessage(message);
+                    pastSentMessages.addMessage(message);
                 }
             } else if (eventKey == Keyboard.KEY_UP) {
                 if (currentCursorIndex == -1) {
-                    this.betterChatMod$chatInputLogsCursor.setOriginallyTyped(this.chat.getText());
+                    this.betterChatMod$pastSentMessagesCursor.setOriginallyTyped(this.chat.getText());
                 }
                 currentCursorIndex = cursor.incrementIndex();
-                if (currentCursorIndex >= inputLogs.list.size()) {
+                if (currentCursorIndex >= pastSentMessages.list.size()) {
                     currentCursorIndex = cursor.decrementIndex();
                 }
 
                 if (currentCursorIndex != previousCursorIndex) {
-                    this.chat.setText(inputLogs.list.get(currentCursorIndex));
+                    this.chat.setText(pastSentMessages.list.get(currentCursorIndex));
                 }
 
             } else if (eventKey == Keyboard.KEY_DOWN) {
@@ -65,7 +65,7 @@ public class MixinGuiChat extends GuiScreen implements IWithChatInputLogs, IWith
                 } else if (currentCursorIndex == -1) {
                     this.chat.setText(cursor.getOriginallyTyped());
                 } else {
-                    this.chat.setText(inputLogs.list.get(currentCursorIndex));
+                    this.chat.setText(pastSentMessages.list.get(currentCursorIndex));
                 }
             } else if (eventKey == Keyboard.KEY_HOME) {
                 this.chat.setCursorPosition(0);

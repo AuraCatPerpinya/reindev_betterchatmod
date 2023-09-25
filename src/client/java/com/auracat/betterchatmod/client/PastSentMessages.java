@@ -3,7 +3,7 @@ package com.auracat.betterchatmod.client;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatInputLogs {
+public class PastSentMessages {
     public List<String> list = new ArrayList<>();
     public int maxSize = 1024;
 

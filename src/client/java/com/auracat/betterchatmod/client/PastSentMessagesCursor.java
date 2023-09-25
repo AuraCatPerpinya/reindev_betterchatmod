@@ -1,6 +1,6 @@
 package com.auracat.betterchatmod.client;
 
-public class ChatInputLogsCursor {
+public class PastSentMessagesCursor {
     private int index = -1;
     private String originallyTyped = "";
 
