@@ -7,10 +7,6 @@ public class ChatInputLogs {
     public List<String> list = new ArrayList<>();
     public int maxSize = 1024;
 
-    public ChatInputLogs() {
-        this.list.add("");
-    }
-
     public void clearMessagesOverMaxSize() {
         while (this.list.size() > this.maxSize) {
             this.list.remove(this.list.size() - 1);
