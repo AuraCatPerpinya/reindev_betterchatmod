@@ -8,8 +8,8 @@ It currently:
 - Extends the chat history up to 1024 messages (instead of 50 in base ReIndev).
 - Adds a "past sent messages history" (You can suggest a better wording).
 
-  Basically the feature that you have in modern Minecraft, with the up and down keys to navigate through your past sent messages (max 1024 messages).
+  Basically the feature that you have in modern Minecraft, with the up and down keys to navigate through your past sent messages & commands (max 1024 messages/commands).
 
-  Note that currently this "chat input history" is global, it is across worlds/servers.
+  **Note that currently this "chat input history" is global, it is across worlds/servers.**
 
 (I might make these things customizable in the future).
