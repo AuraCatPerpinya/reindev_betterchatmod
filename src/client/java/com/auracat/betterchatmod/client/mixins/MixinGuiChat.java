@@ -25,45 +25,53 @@ public class MixinGuiChat extends GuiScreen implements IWithChatInputLogs, IWith
 
     @Inject(method = "keyTyped", at = @At(value = "HEAD"))
     public void keyTypedMixin(char eventChar, int eventKey, CallbackInfo ci) {
-        ChatInputLogsCursor cursor = this.betterChatMod$chatInputLogsCursor;
-        ChatInputLogs inputLogs = this.betterChatMod$chatInputLogs;
+        if (this.chat.isEnabled) {
+            ChatInputLogsCursor cursor = this.betterChatMod$chatInputLogsCursor;
+            ChatInputLogs inputLogs = this.betterChatMod$chatInputLogs;
 
-        int currentCursorIndex = cursor.getIndex();
-
-        if (eventKey == Keyboard.KEY_ESCAPE) {
-            currentCursorIndex = cursor.setIndex(-1);
-        } else if (eventKey == Keyboard.KEY_RETURN && this.chat.isEnabled) {
-            currentCursorIndex = cursor.setIndex(-1);
-            
-            String message = this.chat.getText().trim();
-            if (message.length() > 0) {
-                inputLogs.addMessage(this.chat.getText());
-            }
-        } else if (eventKey == Keyboard.KEY_UP) {
-            if (currentCursorIndex == -1) {
-                this.betterChatMod$chatInputLogsCursor.setOriginallyTyped(this.chat.getText());
-            }
-            currentCursorIndex = cursor.incrementIndex();
-            if (currentCursorIndex >= inputLogs.list.size()) {
-                currentCursorIndex = cursor.decrementIndex();
-            }
-
-            this.chat.setText(inputLogs.list.get(currentCursorIndex));
-
-        } else if (eventKey == Keyboard.KEY_DOWN) {
             int previousCursorIndex = cursor.getIndex();
-            currentCursorIndex = cursor.decrementIndex();
+            int currentCursorIndex = cursor.getIndex();
 
-            if (currentCursorIndex < -1) {
+            if (eventKey == Keyboard.KEY_ESCAPE) {
+                currentCursorIndex = cursor.setIndex(-1);
+            } else if (eventKey == Keyboard.KEY_RETURN) {
+                currentCursorIndex = cursor.setIndex(-1);
+
+                String message = this.chat.getText().trim();
+                if (message.length() > 0) {
+                    inputLogs.addMessage(message);
+                }
+            } else if (eventKey == Keyboard.KEY_UP) {
+                if (currentCursorIndex == -1) {
+                    this.betterChatMod$chatInputLogsCursor.setOriginallyTyped(this.chat.getText());
+                }
                 currentCursorIndex = cursor.incrementIndex();
-            }
+                if (currentCursorIndex >= inputLogs.list.size()) {
+                    currentCursorIndex = cursor.decrementIndex();
+                }
 
-            if (currentCursorIndex == -1 && previousCursorIndex == -1) {
-            } else if (currentCursorIndex == -1) {
-                this.chat.setText(cursor.getOriginallyTyped());
-            } else {
-                this.chat.setText(inputLogs.list.get(currentCursorIndex));
+                if (currentCursorIndex != previousCursorIndex) {
+                    this.chat.setCursorPosition(this.chat.getText().length());
+                    this.chat.setText(inputLogs.list.get(currentCursorIndex));
+                }
+
+            } else if (eventKey == Keyboard.KEY_DOWN) {
+                currentCursorIndex = cursor.decrementIndex();
+
+                if (currentCursorIndex < -1) {
+                    currentCursorIndex = cursor.incrementIndex();
+                }
+
+                if (currentCursorIndex == -1 && previousCursorIndex == -1) {
+                } else if (currentCursorIndex == -1) {
+                    this.chat.setCursorPosition(this.chat.getText().length());
+                    this.chat.setText(cursor.getOriginallyTyped());
+                } else {
+                    this.chat.setCursorPosition(this.chat.getText().length());
+                    this.chat.setText(inputLogs.list.get(currentCursorIndex));
+                }
             }
         }
+
     }
 }
