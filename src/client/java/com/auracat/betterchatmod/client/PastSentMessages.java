@@ -1,14 +1,16 @@
 package com.auracat.betterchatmod.client;
 
+import com.auracat.betterchatmod.client.config.ClientConfigManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class PastSentMessages {
     public List<String> list = new ArrayList<>();
-    public int maxSize = 1024;
 
     public void clearMessagesOverMaxSize() {
-        while (this.list.size() > this.maxSize) {
+        assert ClientConfigManager.getConfig() != null;
+        while (this.list.size() > ClientConfigManager.getConfig().maxSizePastSentMessages) {
             this.list.remove(this.list.size() - 1);
         }
     }
