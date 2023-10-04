@@ -26,46 +26,46 @@ public class MixinGuiChat extends GuiScreen implements IWithPastSentMessages, IW
     @Inject(method = "keyTyped", at = @At(value = "HEAD"))
     public void keyTypedMixin(char eventChar, int eventKey, CallbackInfo ci) {
         if (this.chat.isEnabled) {
-            PastSentMessagesCursor cursor = this.betterChatMod$pastSentMessagesCursor;
+            PastSentMessagesCursor sentMsgsCursor = this.betterChatMod$pastSentMessagesCursor;
             PastSentMessages pastSentMessages = this.betterChatMod$pastSentMessages;
 
-            int previousCursorIndex = cursor.getIndex();
-            int currentCursorIndex = cursor.getIndex();
+            int previousMsgCursorIndex = sentMsgsCursor.getIndex();
+            int currentMsgCursorIndex = sentMsgsCursor.getIndex();
 
             if (eventKey == Keyboard.KEY_ESCAPE) {
-                currentCursorIndex = cursor.setIndex(-1);
+                currentMsgCursorIndex = sentMsgsCursor.setIndex(-1);
             } else if (eventKey == Keyboard.KEY_RETURN) {
-                currentCursorIndex = cursor.setIndex(-1);
+                currentMsgCursorIndex = sentMsgsCursor.setIndex(-1);
 
                 String message = this.chat.getText().trim();
                 if (message.length() > 0) {
                     pastSentMessages.addMessage(message);
                 }
             } else if (eventKey == Keyboard.KEY_UP) {
-                if (currentCursorIndex == -1) {
+                if (currentMsgCursorIndex == -1) {
                     this.betterChatMod$pastSentMessagesCursor.setOriginallyTyped(this.chat.getText());
                 }
-                currentCursorIndex = cursor.incrementIndex();
-                if (currentCursorIndex >= pastSentMessages.list.size()) {
-                    currentCursorIndex = cursor.decrementIndex();
+                currentMsgCursorIndex = sentMsgsCursor.incrementIndex();
+                if (currentMsgCursorIndex >= pastSentMessages.list.size()) {
+                    currentMsgCursorIndex = sentMsgsCursor.decrementIndex();
                 }
 
-                if (currentCursorIndex != previousCursorIndex) {
-                    this.chat.setText(pastSentMessages.list.get(currentCursorIndex));
+                if (currentMsgCursorIndex != previousMsgCursorIndex) {
+                    this.chat.setText(pastSentMessages.list.get(currentMsgCursorIndex));
                 }
 
             } else if (eventKey == Keyboard.KEY_DOWN) {
-                currentCursorIndex = cursor.decrementIndex();
+                currentMsgCursorIndex = sentMsgsCursor.decrementIndex();
 
-                if (currentCursorIndex < -1) {
-                    currentCursorIndex = cursor.incrementIndex();
+                if (currentMsgCursorIndex < -1) {
+                    currentMsgCursorIndex = sentMsgsCursor.incrementIndex();
                 }
 
-                if (currentCursorIndex == -1 && previousCursorIndex == -1) {
-                } else if (currentCursorIndex == -1) {
-                    this.chat.setText(cursor.getOriginallyTyped());
+                if (currentMsgCursorIndex == -1 && previousMsgCursorIndex == -1) {
+                } else if (currentMsgCursorIndex == -1) {
+                    this.chat.setText(sentMsgsCursor.getOriginallyTyped());
                 } else {
-                    this.chat.setText(pastSentMessages.list.get(currentCursorIndex));
+                    this.chat.setText(pastSentMessages.list.get(currentMsgCursorIndex));
                 }
             } else if (eventKey == Keyboard.KEY_HOME) {
                 this.chat.setCursorPosition(0);
@@ -73,7 +73,7 @@ public class MixinGuiChat extends GuiScreen implements IWithPastSentMessages, IW
                 this.chat.setCursorPosition(this.chat.getText().length());
             }
 
-            if (currentCursorIndex != previousCursorIndex) {
+            if (currentMsgCursorIndex != previousMsgCursorIndex) {
                 this.chat.setCursorPosition(this.chat.getText().length());
             }
         }
