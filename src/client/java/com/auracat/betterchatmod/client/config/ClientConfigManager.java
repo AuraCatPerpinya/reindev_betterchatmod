@@ -23,16 +23,15 @@ public class ClientConfigManager extends ConfigManager {
         ClientConfig readConfig = readConfigFile(
                 filePathString,
                 ClientConfig.class,
-                ClientConfig.defaultValues()
+                new ClientConfig()
         );
-        boolean didAnythingChange = readConfig.ensureProperties();
-        if (didAnythingChange) {
-            writeConfigFile(filePathString, readConfig);
-        }
+
         Utils.log(
                 "\n" + "maxSizeChatMessageList: " + readConfig.maxSizeChatMessageList
                         + "\n" + "maxSizePastSentMessages: " + readConfig.maxSizePastSentMessages
         );
+
+        writeConfigFile(filePathString, readConfig);
 
         config = readConfig;
     }
