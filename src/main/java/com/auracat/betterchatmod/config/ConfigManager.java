@@ -16,6 +16,7 @@ public class ConfigManager {
     public static Path configFolderPath = null;
     public static Gson gson = new GsonBuilder()
             .serializeNulls()
+            .setPrettyPrinting()
             .create();
 
     public static void initializeConfigFolder(String configFolderPathString) throws IOException {
