@@ -4,6 +4,8 @@ import com.auracat.betterchatmod.client.PastSentMessages;
 import com.auracat.betterchatmod.client.PastSentMessagesCursor;
 import com.auracat.betterchatmod.client.IWithPastSentMessages;
 import com.auracat.betterchatmod.client.IWithPastSentMessagesCursor;
+import com.auracat.betterchatmod.client.config.ClientConfigManager;
+import com.auracat.betterchatmod.client.config.TextSeparators;
 import net.minecraft.src.client.gui.GuiChat;
 import net.minecraft.src.client.gui.GuiScreen;
 import net.minecraft.src.client.gui.GuiTextField;
@@ -23,7 +25,63 @@ public class MixinGuiChat extends GuiScreen implements IWithPastSentMessages, IW
     @Unique
     PastSentMessages betterChatMod$pastSentMessages = ((IWithPastSentMessages) this.mc).betterChatMod$pastSentMessages;
 
-    @Inject(method = "keyTyped", at = @At(value = "HEAD"))
+    @Unique
+    public int betterChatMod$searchNextTextSeparator(int increment, int currentCursorPosition, String text) {
+        assert ClientConfigManager.getConfig() != null;
+        TextSeparators textSeparators = ClientConfigManager.getConfig().textSeparators;
+
+        Character currentSeparatorChar = null;
+        boolean include = true;
+        boolean firstCharIsSeparator = false;
+        int returnIndex = currentCursorPosition;
+        int previousIndex = currentCursorPosition;
+
+        for (int i = currentCursorPosition; (i < text.length() || i > 0); i = i + increment) {
+            System.out.println("index: " + i);
+            System.out.println("currentSeparatorChar: " + currentSeparatorChar);
+            System.out.println("include: " + include);
+            System.out.println("firstCharIsSeparator: " + firstCharIsSeparator);
+            if (i <= 0) {
+                return 0;
+            }
+            char c = text.charAt(i);
+            if (currentSeparatorChar != null && c != currentSeparatorChar) {
+                returnIndex = previousIndex;
+                break;
+            }
+
+            if (textSeparators.include.contains(c)) {
+                currentSeparatorChar = c;
+                include = true;
+                if (i == currentCursorPosition) {
+                    firstCharIsSeparator = true;
+                }
+                if (!firstCharIsSeparator) {
+                    returnIndex = i;
+                    break;
+                }
+            } else if (textSeparators.exclude.contains(c)) {
+                currentSeparatorChar = c;
+                include = false;
+                if (i == currentCursorPosition) {
+                    firstCharIsSeparator = true;
+                }
+                if (!firstCharIsSeparator) {
+                    returnIndex = i;
+                    break;
+                }
+            }
+
+            previousIndex = i;
+        }
+
+        if (include) {
+            returnIndex = returnIndex + increment;
+        }
+        return returnIndex;
+    }
+
+    @Inject(method = "keyTyped", at = @At(value = "HEAD"), cancellable = true)
     public void keyTypedMixin(char eventChar, int eventKey, CallbackInfo ci) {
         if (this.chat.isEnabled) {
             PastSentMessagesCursor sentMsgsCursor = this.betterChatMod$pastSentMessagesCursor;
@@ -75,6 +133,40 @@ public class MixinGuiChat extends GuiScreen implements IWithPastSentMessages, IW
 
             if (currentMsgCursorIndex != previousMsgCursorIndex) {
                 this.chat.setCursorPosition(this.chat.getText().length());
+            }
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+                String currentText = this.chat.getText();
+                int currentCursorPosition = this.chat.cursorPosition;
+                if (currentCursorPosition >= currentText.length()) {
+                    currentCursorPosition = currentText.length() - 1;
+                }
+
+                if (eventKey == Keyboard.KEY_BACK) {
+                    int textSeparatorIndex = this.betterChatMod$searchNextTextSeparator(
+                            -1,
+                            currentCursorPosition,
+                            currentText
+                    );
+
+                    String newText = currentText.substring(0, textSeparatorIndex)
+                                    + currentText.substring(currentCursorPosition);
+                    this.chat.setText(newText);
+                    this.chat.setCursorPosition(textSeparatorIndex);
+                } else if (eventKey == Keyboard.KEY_DELETE) {
+                    int textSeparatorIndex = this.betterChatMod$searchNextTextSeparator(
+                            1,
+                            currentCursorPosition,
+                            currentText
+                    );
+
+                    String newText = currentText.substring(0, textSeparatorIndex)
+                            + currentText.substring(currentCursorPosition);
+                    this.chat.setText(newText);
+                    this.chat.setCursorPosition(textSeparatorIndex);
+                }
+
+                ci.cancel();
             }
         }
 
