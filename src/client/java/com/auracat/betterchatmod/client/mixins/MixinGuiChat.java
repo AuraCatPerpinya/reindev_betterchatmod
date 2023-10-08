@@ -17,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
+
 @Mixin(GuiChat.class)
 public class MixinGuiChat extends GuiScreen implements IWithPastSentMessages, IWithPastSentMessagesCursor {
     @Shadow
@@ -29,41 +31,39 @@ public class MixinGuiChat extends GuiScreen implements IWithPastSentMessages, IW
     public int betterChatMod$searchNextTextSeparator(int increment, int currentCursorPosition, String text) {
         assert ClientConfigManager.getConfig() != null;
         TextSeparators textSeparators = ClientConfigManager.getConfig().textSeparators;
+        List<Character> separators = textSeparators.getMergedList();
 
         Character currentSeparatorChar = null;
-        boolean include = true;
         boolean firstCharIsSeparator = false;
-        int returnIndex = currentCursorPosition;
-        int previousIndex = currentCursorPosition;
 
-        for (int i = currentCursorPosition; (i < text.length() || i > 0); i = i + increment) {
-            System.out.println("index: " + i);
-            System.out.println("currentSeparatorChar: " + currentSeparatorChar);
-            System.out.println("include: " + include);
-            System.out.println("firstCharIsSeparator: " + firstCharIsSeparator);
-            if (i <= 0) {
-                return 0;
-            }
-            char c = text.charAt(i);
-            if (currentSeparatorChar != null && c != currentSeparatorChar) {
-                returnIndex = previousIndex;
+        int initialIndex = currentCursorPosition;
+        int returnIndex = currentCursorPosition;
+
+        // increment < 0 means backwards, from right to left
+        if (increment < 0) {
+            initialIndex--;
+        }
+
+        for (int i = initialIndex; i <= text.length(); i = i + increment) {
+            if (i >= text.length()) {
+                returnIndex = text.length();
                 break;
             }
-
-            if (textSeparators.include.contains(c)) {
+            if (i < 0) {
+                returnIndex = 0;
+                break;
+            }
+            Character c = text.charAt(i);
+            if (
+                    currentSeparatorChar != null
+                            && !c.equals(currentSeparatorChar)
+            ) {
+                returnIndex = i;
+                break;
+            }
+            if (separators.contains(c)) {
                 currentSeparatorChar = c;
-                include = true;
-                if (i == currentCursorPosition) {
-                    firstCharIsSeparator = true;
-                }
-                if (!firstCharIsSeparator) {
-                    returnIndex = i;
-                    break;
-                }
-            } else if (textSeparators.exclude.contains(c)) {
-                currentSeparatorChar = c;
-                include = false;
-                if (i == currentCursorPosition) {
+                if (i == initialIndex) {
                     firstCharIsSeparator = true;
                 }
                 if (!firstCharIsSeparator) {
@@ -71,13 +71,9 @@ public class MixinGuiChat extends GuiScreen implements IWithPastSentMessages, IW
                     break;
                 }
             }
-
-            previousIndex = i;
         }
 
-        if (include) {
-            returnIndex = returnIndex + increment;
-        }
+        System.out.println("returnIndex: " + returnIndex);
         return returnIndex;
     }
 
@@ -138,31 +134,66 @@ public class MixinGuiChat extends GuiScreen implements IWithPastSentMessages, IW
             if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
                 String currentText = this.chat.getText();
                 int currentCursorPosition = this.chat.cursorPosition;
-                if (currentCursorPosition >= currentText.length()) {
-                    currentCursorPosition = currentText.length() - 1;
-                }
 
                 if (eventKey == Keyboard.KEY_BACK) {
-                    int textSeparatorIndex = this.betterChatMod$searchNextTextSeparator(
-                            -1,
-                            currentCursorPosition,
-                            currentText
-                    );
+                    // Deletes a group of characters (typically a word) backwards, from right to left
+                    if (currentText.length() > 0) {
+                        int textSeparatorIndex = this.betterChatMod$searchNextTextSeparator(
+                                -1,
+                                currentCursorPosition,
+                                currentText
+                        );
+                        if (textSeparatorIndex > 0) {
+                            textSeparatorIndex++;
+                        }
 
-                    String newText = currentText.substring(0, textSeparatorIndex)
-                                    + currentText.substring(currentCursorPosition);
-                    this.chat.setText(newText);
-                    this.chat.setCursorPosition(textSeparatorIndex);
+                        String newText = currentText.substring(0, textSeparatorIndex);
+                        if (currentCursorPosition < currentText.length()) {
+                            newText = newText + currentText.substring(currentCursorPosition);
+                        }
+
+                        this.chat.setText(newText);
+                        this.chat.setCursorPosition(textSeparatorIndex);
+                    }
+
                 } else if (eventKey == Keyboard.KEY_DELETE) {
+                    // Deletes a group of characters forwards, from left to right
                     int textSeparatorIndex = this.betterChatMod$searchNextTextSeparator(
                             1,
                             currentCursorPosition,
                             currentText
                     );
 
-                    String newText = currentText.substring(0, textSeparatorIndex)
-                            + currentText.substring(currentCursorPosition);
+                    String newText = currentText.substring(0, currentCursorPosition);
+                    if (textSeparatorIndex < currentText.length()) {
+                        newText = newText + currentText.substring(textSeparatorIndex);
+                    }
+
                     this.chat.setText(newText);
+                }
+
+                if (eventKey == Keyboard.KEY_LEFT) {
+                    // Moves the cursor to the next text separator at its left
+                    if (currentText.length() > 0) {
+                        int textSeparatorIndex = this.betterChatMod$searchNextTextSeparator(
+                                -1,
+                                currentCursorPosition,
+                                currentText
+                        );
+                        if (textSeparatorIndex > 0) {
+                            textSeparatorIndex++;
+                        }
+
+                        this.chat.setCursorPosition(textSeparatorIndex);
+                    }
+                } else if (eventKey == Keyboard.KEY_RIGHT) {
+                    // Moves the cursor to the next text separator at its right
+                    int textSeparatorIndex = this.betterChatMod$searchNextTextSeparator(
+                            1,
+                            currentCursorPosition,
+                            currentText
+                    );
+
                     this.chat.setCursorPosition(textSeparatorIndex);
                 }
 
