@@ -1,11 +1,11 @@
-package com.auracat.betterchatmod.client;
+package com.auracat.betterchatmod.client.messagehistory;
 
 import com.auracat.betterchatmod.client.config.ClientConfigManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PastSentMessages {
+public class MessageHistory {
     public List<String> list = new ArrayList<>();
 
     public void clearMessagesOverMaxSize() {

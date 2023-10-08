@@ -1,9 +1,9 @@
 package com.auracat.betterchatmod.client.mixins;
 
-import com.auracat.betterchatmod.client.PastSentMessages;
-import com.auracat.betterchatmod.client.PastSentMessagesCursor;
-import com.auracat.betterchatmod.client.IWithPastSentMessages;
-import com.auracat.betterchatmod.client.IWithPastSentMessagesCursor;
+import com.auracat.betterchatmod.client.messagehistory.MessageHistory;
+import com.auracat.betterchatmod.client.messagehistory.MessageHistoryCursor;
+import com.auracat.betterchatmod.client.messagehistory.IWithMessageHistory;
+import com.auracat.betterchatmod.client.messagehistory.IWithMessageHistoryCursor;
 import com.auracat.betterchatmod.client.config.ClientConfigManager;
 import com.auracat.betterchatmod.client.config.TextSeparators;
 import net.minecraft.src.client.gui.GuiChat;
@@ -20,12 +20,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(GuiChat.class)
-public class MixinGuiChat extends GuiScreen implements IWithPastSentMessages, IWithPastSentMessagesCursor {
+public class MixinGuiChat extends GuiScreen implements IWithMessageHistory, IWithMessageHistoryCursor {
     @Shadow
     public GuiTextField chat;
 
     @Unique
-    PastSentMessages betterChatMod$pastSentMessages = ((IWithPastSentMessages) this.mc).betterChatMod$pastSentMessages;
+    MessageHistory betterChatMod$messageHistory = ((IWithMessageHistory) this.mc).betterChatMod$messageHistory;
 
     @Unique
     public int betterChatMod$searchNextTextSeparator(int increment, int currentCursorPosition, String text) {
@@ -80,46 +80,46 @@ public class MixinGuiChat extends GuiScreen implements IWithPastSentMessages, IW
     @Inject(method = "keyTyped", at = @At(value = "HEAD"), cancellable = true)
     public void keyTypedMixin(char eventChar, int eventKey, CallbackInfo ci) {
         if (this.chat.isEnabled) {
-            PastSentMessagesCursor sentMsgsCursor = this.betterChatMod$pastSentMessagesCursor;
-            PastSentMessages pastSentMessages = this.betterChatMod$pastSentMessages;
+            MessageHistoryCursor msgHistoryCursor = this.betterChatMod$messageHistoryCursor;
+            MessageHistory messageHistory = this.betterChatMod$messageHistory;
 
-            int originalMsgCursorIndex = sentMsgsCursor.getIndex();
-            int currentMsgCursorIndex = sentMsgsCursor.getIndex();
+            int originalMsgCursorIndex = msgHistoryCursor.getIndex();
+            int currentMsgCursorIndex = msgHistoryCursor.getIndex();
 
             if (eventKey == Keyboard.KEY_ESCAPE) {
-                currentMsgCursorIndex = sentMsgsCursor.setIndex(-1);
+                currentMsgCursorIndex = msgHistoryCursor.setIndex(-1);
             } else if (eventKey == Keyboard.KEY_RETURN) {
-                currentMsgCursorIndex = sentMsgsCursor.setIndex(-1);
+                currentMsgCursorIndex = msgHistoryCursor.setIndex(-1);
 
                 String message = this.chat.getText().trim();
                 if (message.length() > 0) {
-                    pastSentMessages.addMessage(message);
+                    messageHistory.addMessage(message);
                 }
             } else if (eventKey == Keyboard.KEY_UP) {
                 if (currentMsgCursorIndex == -1) {
-                    this.betterChatMod$pastSentMessagesCursor.setOriginallyTyped(this.chat.getText());
+                    this.betterChatMod$messageHistoryCursor.setOriginallyTyped(this.chat.getText());
                 }
-                currentMsgCursorIndex = sentMsgsCursor.incrementIndex();
-                if (currentMsgCursorIndex >= pastSentMessages.list.size()) {
-                    currentMsgCursorIndex = sentMsgsCursor.decrementIndex();
+                currentMsgCursorIndex = msgHistoryCursor.incrementIndex();
+                if (currentMsgCursorIndex >= messageHistory.list.size()) {
+                    currentMsgCursorIndex = msgHistoryCursor.decrementIndex();
                 }
 
                 if (currentMsgCursorIndex != originalMsgCursorIndex) {
-                    this.chat.setText(pastSentMessages.list.get(currentMsgCursorIndex));
+                    this.chat.setText(messageHistory.list.get(currentMsgCursorIndex));
                 }
 
             } else if (eventKey == Keyboard.KEY_DOWN) {
-                currentMsgCursorIndex = sentMsgsCursor.decrementIndex();
+                currentMsgCursorIndex = msgHistoryCursor.decrementIndex();
 
                 if (currentMsgCursorIndex < -1) {
-                    currentMsgCursorIndex = sentMsgsCursor.incrementIndex();
+                    currentMsgCursorIndex = msgHistoryCursor.incrementIndex();
                 }
 
                 if (currentMsgCursorIndex == -1 && originalMsgCursorIndex == -1) {
                 } else if (currentMsgCursorIndex == -1) {
-                    this.chat.setText(sentMsgsCursor.getOriginallyTyped());
+                    this.chat.setText(msgHistoryCursor.getOriginallyTyped());
                 } else {
-                    this.chat.setText(pastSentMessages.list.get(currentMsgCursorIndex));
+                    this.chat.setText(messageHistory.list.get(currentMsgCursorIndex));
                 }
             } else if (eventKey == Keyboard.KEY_HOME) {
                 this.chat.setCursorPosition(0);

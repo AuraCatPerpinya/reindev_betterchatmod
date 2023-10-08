@@ -1,6 +1,6 @@
-package com.auracat.betterchatmod.client;
+package com.auracat.betterchatmod.client.messagehistory;
 
-public class PastSentMessagesCursor {
+public class MessageHistoryCursor {
     private int index = -1;
     private String originallyTyped = "";
 
