@@ -10,7 +10,7 @@ public class MessageHistory {
 
     public void clearMessagesOverMaxSize() {
         assert ClientConfigManager.getConfig() != null;
-        while (this.list.size() > ClientConfigManager.getConfig().maxSizePastSentMessages) {
+        while (this.list.size() > ClientConfigManager.getConfig().maxSizeMessageHistory) {
             this.list.remove(this.list.size() - 1);
         }
     }

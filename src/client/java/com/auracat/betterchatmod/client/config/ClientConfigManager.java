@@ -19,20 +19,31 @@ public class ClientConfigManager extends ConfigManager {
         String filePathString = "reindev_betterchatmod.json";
 
         initializeConfigFolder("config/reindev_betterchatmod");
+        ClientConfig defaultConfig = new ClientConfig();
 
-        ClientConfig readConfig = readConfigFile(
+        ClientConfig config = readConfigFile(
                 filePathString,
                 ClientConfig.class,
-                new ClientConfig()
+                defaultConfig
         );
+
+        try {
+            Utils.ensureDefaultValues(config, defaultConfig);
+        } catch (Error | Exception e) {
+            throw new RuntimeException(e);
+        }
 
         Utils.log(
-                "\n" + "maxSizeChatMessageList: " + readConfig.maxSizeChatMessageList
-                        + "\n" + "maxSizePastSentMessages: " + readConfig.maxSizePastSentMessages
+                "\n" + "maxSizeChatMessageList: " + config.maxSizeChatMessageList
+                        + "\n" + "maxSizeMessageHistory: " + config.maxSizeMessageHistory
+                        + "\n" + "textSeparators: "
+                        + "\n" + "  include: " + config.textSeparators.include.stream().map((character -> '"' + character + '"'))
+                        + "\n" + "  exclude: " + config.textSeparators.exclude.stream().map((character -> '"' + character + '"'))
+                        + "\n" + "messageHistoryIsPerWorld: " + config.messageHistoryIsPerWorld
         );
 
-        writeConfigFile(filePathString, readConfig);
+        writeConfigFile(filePathString, config);
 
-        config = readConfig;
+        ClientConfigManager.config = config;
     }
 }

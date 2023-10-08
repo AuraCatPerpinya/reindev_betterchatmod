@@ -2,6 +2,7 @@ package com.auracat.betterchatmod;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Field;
 
 public class Utils {
     public static String readAllCharactersOneByOne(Reader reader) throws IOException {
@@ -19,5 +20,38 @@ public class Utils {
 
     public static void log(String text) {
         System.out.println("[BetterChatMod] " + text);
+    }
+
+    public static <T> T ensureDefaultValues(T object, Object defaultObject)
+            throws NoSuchFieldException, IllegalAccessException {
+
+        Class<?> objectClass = object.getClass();
+        Class<?> defaultObjectClass = object.getClass();
+        
+        Field[] objectFields = objectClass.getDeclaredFields();
+
+        for (int i = 0; i < objectFields.length; i++) {
+            Field field = objectFields[i];
+            boolean isPrivate = false;
+            if (!field.isAccessible()) {
+                isPrivate = true;
+                field.setAccessible(true);
+            }
+
+            String fieldName = field.getName();
+            Field defaultField = defaultObjectClass.getDeclaredField(fieldName);
+
+            Object value = field.get(object);
+
+            if (value == null) {
+                Object defaultValue = defaultField.get(defaultObject);
+                field.set(object, defaultValue);
+            }
+            if (isPrivate) {
+                field.setAccessible(false);
+            }
+        }
+        
+        return object;
     }
 }
