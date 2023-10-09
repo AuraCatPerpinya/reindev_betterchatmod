@@ -29,6 +29,7 @@ public class ClientConfigManager extends ConfigManager {
 
         try {
             Utils.ensureDefaultValues(config, defaultConfig);
+            Utils.ensureDefaultValues(config.textSeparators, new TextSeparators());
         } catch (Error | Exception e) {
             throw new RuntimeException(e);
         }
