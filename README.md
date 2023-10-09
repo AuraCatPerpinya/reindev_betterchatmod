@@ -30,6 +30,7 @@ What does it currently do:
   - Json-based config system. ([How to configure?](#how-to-configure))
   - Ctrl+backspace/delete to delete a whole word or chunk of characters.
   - Ctrl+left/right arrow to navigate through a whole word or chunk of characters.
+  - Message history per world, customizable.
   - (Probably more, as I develop this version :3)
 
 ## How to install?
