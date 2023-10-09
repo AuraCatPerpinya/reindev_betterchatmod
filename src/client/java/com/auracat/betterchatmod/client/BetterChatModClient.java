@@ -12,8 +12,22 @@ import java.io.IOException;
 
 @SuppressWarnings("unused")
 public class BetterChatModClient extends BetterChatMod implements ClientMod {
-    public static MessageHistory messageHistory = new MessageHistory();
-    public static MessageHistoryCursor messageHistoryCursor = new MessageHistoryCursor();
+    private static MessageHistory messageHistory = new MessageHistory();
+    private static MessageHistoryCursor messageHistoryCursor = new MessageHistoryCursor();
+
+    public static MessageHistory getMessageHistory() {
+        return messageHistory;
+    }
+    public static void setMessageHistory(MessageHistory messageHistory) {
+        BetterChatModClient.messageHistory = messageHistory;
+    }
+
+    public static MessageHistoryCursor getMessageHistoryCursor() {
+        return messageHistoryCursor;
+    }
+    public static void setMessageHistoryCursor(MessageHistoryCursor messageHistoryCursor) {
+        BetterChatModClient.messageHistoryCursor = messageHistoryCursor;
+    }
 
     public void addModCompatHooks() {
         ModCompatCommandAutocomplete compatCommandAutocomplete = new ModCompatCommandAutocomplete();

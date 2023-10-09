@@ -6,7 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageHistory {
-    public List<String> list = new ArrayList<>();
+    private List<String> list = new ArrayList<>();
+
+    public List<String> getList() {
+        return list;
+    }
+    public void setList(List<String> list) {
+        this.list = list;
+    }
 
     public void clearMessagesOverMaxSize() {
         assert ClientConfigManager.getConfig() != null;

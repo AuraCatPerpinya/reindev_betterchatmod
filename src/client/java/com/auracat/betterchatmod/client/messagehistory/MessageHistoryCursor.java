@@ -9,7 +9,6 @@ public class MessageHistoryCursor {
     }
     public int setIndex(int newValue) {
         index = newValue;
-
         return index;
     }
     public int incrementIndex() {

@@ -76,8 +76,9 @@ public class MixinGuiChat extends GuiScreen {
     @Inject(method = "keyTyped", at = @At(value = "HEAD"), cancellable = true)
     public void onKeyTyped(char eventChar, int eventKey, CallbackInfo ci) {
         if (this.chat.isEnabled && this.chat.isFocused) {
-            MessageHistory messageHistory = BetterChatModClient.messageHistory;
-            MessageHistoryCursor msgHistoryCursor = BetterChatModClient.messageHistoryCursor;
+            MessageHistory messageHistory = BetterChatModClient.getMessageHistory();
+            List<String> msgHistoryList = messageHistory.getList();
+            MessageHistoryCursor msgHistoryCursor = BetterChatModClient.getMessageHistoryCursor();
 
             int originalMsgCursorIndex = msgHistoryCursor.getIndex();
             int currentMsgCursorIndex = msgHistoryCursor.getIndex();
@@ -96,12 +97,12 @@ public class MixinGuiChat extends GuiScreen {
                     msgHistoryCursor.setOriginallyTyped(this.chat.getText());
                 }
                 currentMsgCursorIndex = msgHistoryCursor.incrementIndex();
-                if (currentMsgCursorIndex >= messageHistory.list.size()) {
+                if (currentMsgCursorIndex >= msgHistoryList.size()) {
                     currentMsgCursorIndex = msgHistoryCursor.decrementIndex();
                 }
 
                 if (currentMsgCursorIndex != originalMsgCursorIndex) {
-                    this.chat.setText(messageHistory.list.get(currentMsgCursorIndex));
+                    this.chat.setText(msgHistoryList.get(currentMsgCursorIndex));
                 }
 
             } else if (eventKey == Keyboard.KEY_DOWN) {
@@ -116,7 +117,7 @@ public class MixinGuiChat extends GuiScreen {
                 } else if (currentMsgCursorIndex == -1) {
                     this.chat.setText(msgHistoryCursor.getOriginallyTyped());
                 } else {
-                    this.chat.setText(messageHistory.list.get(currentMsgCursorIndex));
+                    this.chat.setText(msgHistoryList.get(currentMsgCursorIndex));
                 }
             } else if (eventKey == Keyboard.KEY_HOME) {
                 this.chat.setCursorPosition(0);
