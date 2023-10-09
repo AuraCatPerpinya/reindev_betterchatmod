@@ -9,6 +9,7 @@ that aims to improve on the chat of base ReIndev.
 If you want a command autocompletion feature, please take a look at the amazing [ReIndev Command Autocomplete](https://github.com/jelliedbanana/ReIndev-CommandAutocomplete) mod.
 
 (Currently conflicts with this mod, but we do plan to fix that).
+
 ## Okay cool, but... what does it do?
 What does it currently do:
 - Extended chat logs, default 1024, instead of 50 in base ReIndev.

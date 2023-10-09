@@ -78,7 +78,7 @@ public class MixinGuiChat extends GuiScreen implements IWithMessageHistory, IWit
     }
 
     @Inject(method = "keyTyped", at = @At(value = "HEAD"), cancellable = true)
-    public void keyTypedMixin(char eventChar, int eventKey, CallbackInfo ci) {
+    public void onKeyTyped(char eventChar, int eventKey, CallbackInfo ci) {
         if (this.chat.isEnabled && this.chat.isFocused) {
             MessageHistoryCursor msgHistoryCursor = this.betterChatMod$messageHistoryCursor;
             MessageHistory messageHistory = this.betterChatMod$messageHistory;
@@ -115,6 +115,7 @@ public class MixinGuiChat extends GuiScreen implements IWithMessageHistory, IWit
                     currentMsgCursorIndex = msgHistoryCursor.incrementIndex();
                 }
 
+                //noinspection StatementWithEmptyBody
                 if (currentMsgCursorIndex == -1 && originalMsgCursorIndex == -1) {
                 } else if (currentMsgCursorIndex == -1) {
                     this.chat.setText(msgHistoryCursor.getOriginallyTyped());
