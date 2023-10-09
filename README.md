@@ -18,9 +18,9 @@ What does it currently do:
   Basically the feature that you have in modern Minecraft,
   with the up and down keys to navigate through your past sent messages & commands.
 
-  By default it will be global in 1.1.0 and prior.
+  By default it is global in 1.1.0 and prior.
   
-  In 1.2.0+ it will be per world/server, but you can change that
+  In 1.2.0+ it will be per world/server, but you will be able to change that
   (Cf. the "[How to configure?](#how-to-configure)" section).
 
 - New in 1.1.0: You can use the "home" and the "end" keys to move the cursor at the extremities of the chat text field
