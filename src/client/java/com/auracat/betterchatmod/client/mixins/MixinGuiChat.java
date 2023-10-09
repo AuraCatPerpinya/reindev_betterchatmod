@@ -1,9 +1,8 @@
 package com.auracat.betterchatmod.client.mixins;
 
+import com.auracat.betterchatmod.client.BetterChatModClient;
 import com.auracat.betterchatmod.client.messagehistory.MessageHistory;
 import com.auracat.betterchatmod.client.messagehistory.MessageHistoryCursor;
-import com.auracat.betterchatmod.client.messagehistory.IWithMessageHistory;
-import com.auracat.betterchatmod.client.messagehistory.IWithMessageHistoryCursor;
 import com.auracat.betterchatmod.client.config.ClientConfigManager;
 import com.auracat.betterchatmod.client.config.TextSeparators;
 import net.minecraft.src.client.gui.GuiChat;
@@ -20,12 +19,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(GuiChat.class)
-public class MixinGuiChat extends GuiScreen implements IWithMessageHistory, IWithMessageHistoryCursor {
+public class MixinGuiChat extends GuiScreen {
     @Shadow
     public GuiTextField chat;
-
-    @Unique
-    MessageHistory betterChatMod$messageHistory = ((IWithMessageHistory) this.mc).betterChatMod$messageHistory;
 
     @Unique
     public int betterChatMod$searchNextTextSeparator(int increment, int currentCursorPosition, String text) {
@@ -80,8 +76,8 @@ public class MixinGuiChat extends GuiScreen implements IWithMessageHistory, IWit
     @Inject(method = "keyTyped", at = @At(value = "HEAD"), cancellable = true)
     public void onKeyTyped(char eventChar, int eventKey, CallbackInfo ci) {
         if (this.chat.isEnabled && this.chat.isFocused) {
-            MessageHistoryCursor msgHistoryCursor = this.betterChatMod$messageHistoryCursor;
-            MessageHistory messageHistory = this.betterChatMod$messageHistory;
+            MessageHistory messageHistory = BetterChatModClient.messageHistory;
+            MessageHistoryCursor msgHistoryCursor = BetterChatModClient.messageHistoryCursor;
 
             int originalMsgCursorIndex = msgHistoryCursor.getIndex();
             int currentMsgCursorIndex = msgHistoryCursor.getIndex();
@@ -97,7 +93,7 @@ public class MixinGuiChat extends GuiScreen implements IWithMessageHistory, IWit
                 }
             } else if (eventKey == Keyboard.KEY_UP) {
                 if (currentMsgCursorIndex == -1) {
-                    this.betterChatMod$messageHistoryCursor.setOriginallyTyped(this.chat.getText());
+                    msgHistoryCursor.setOriginallyTyped(this.chat.getText());
                 }
                 currentMsgCursorIndex = msgHistoryCursor.incrementIndex();
                 if (currentMsgCursorIndex >= messageHistory.list.size()) {
