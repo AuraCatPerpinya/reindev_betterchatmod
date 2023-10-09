@@ -33,15 +33,6 @@ public class ClientConfigManager extends ConfigManager {
             throw new RuntimeException(e);
         }
 
-        Utils.log(
-                "\n" + "maxSizeChatMessageList: " + config.maxSizeChatMessageList
-                        + "\n" + "maxSizeMessageHistory: " + config.maxSizeMessageHistory
-                        + "\n" + "textSeparators: "
-                        + "\n" + "  include: " + config.textSeparators.include.stream().map((character -> '"' + character + '"'))
-                        + "\n" + "  exclude: " + config.textSeparators.exclude.stream().map((character -> '"' + character + '"'))
-                        + "\n" + "messageHistoryIsPerWorld: " + config.messageHistoryIsPerWorld
-        );
-
         writeConfigFile(filePathString, config);
 
         ClientConfigManager.config = config;
