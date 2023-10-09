@@ -3,12 +3,13 @@
 ## What is this?
 This is a simple - but customizable - mod for [ReIndev 2.8.1_04](https://reindev.miraheze.org/wiki/Reindev_Wiki),
 and for ReIndev's own mod loader called [FoxLoader](https://github.com/Fox2Code/FoxLoader),
-that aims to improve on the chat of base ReIndev.
+that aims to improve the chat of base ReIndev.
 (Which is based on Minecraft Beta 1.7.3)
 
 If you want a command autocompletion feature, please take a look at the amazing [ReIndev Command Autocomplete](https://github.com/jelliedbanana/ReIndev-CommandAutocomplete) mod.
 
 (Currently conflicts with this mod, but we do plan to fix that).
+
 ## Okay cool, but... what does it do?
 What does it currently do:
 - Extended chat logs, default 1024, instead of 50 in base ReIndev.

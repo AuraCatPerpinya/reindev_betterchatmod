@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(GuiIngame.class)
 public abstract class MixinGuiIngame extends Gui {
     @ModifyConstant(method = "addChatMessage", constant = @Constant(intValue = 50))
-    private int addChatMessageMixin(int constant) {
+    private int onAddChatMessage(int constant) {
         assert ClientConfigManager.getConfig() != null;
         return ClientConfigManager.getConfig().maxSizeChatMessageList;
     }

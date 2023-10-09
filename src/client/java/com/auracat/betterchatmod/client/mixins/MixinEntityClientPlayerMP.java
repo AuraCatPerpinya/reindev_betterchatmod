@@ -17,6 +17,6 @@ public abstract class MixinEntityClientPlayerMP extends EntityPlayerSP {
     }
 
     @Inject(method = "sendChatMessage", at = @At(value = "HEAD"))
-    public void sendChatMessageMixin(String s, CallbackInfo ci) {
-   }
+    public void onSendChatMessage(String s, CallbackInfo ci) {
+    }
 }

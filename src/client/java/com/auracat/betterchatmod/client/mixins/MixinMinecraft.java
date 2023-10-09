@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft implements Runnable, IWithMessageHistory {
     @Inject(method = "startGame", at = @At(value = "RETURN"))
-    public void startGameMixin(CallbackInfo ci) {
-
+    public void onStartGame(CallbackInfo ci) {
     }
 }
