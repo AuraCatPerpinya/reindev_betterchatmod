@@ -23,15 +23,16 @@ What does it currently do:
   In 1.2.0+ it will be per world/server, but you will be able to change that
   (Cf. the "[How to configure?](#how-to-configure)" section).
 
-- New in 1.1.0: You can use the "home" and the "end" keys to move the cursor at the extremities of the chat text field
+- New in 1.1.0:
+You can use the "home" and the "end" keys, to move the
+cursor at the beginning and the end of the chat text field.
 
 - Coming soon in 1.2.0:
-
   - Json-based config system. ([How to configure?](#how-to-configure))
   - Ctrl+backspace/delete to delete a whole word or chunk of characters.
   - Ctrl+left/right arrow to navigate through a whole word or chunk of characters.
   - Message history per world, customizable.
-  - (Probably more, as I develop this version :3)
+  - (Probably more, as I develop this version :3).
 
 ## How to install?
 Make sure you have [FoxLoader](https://github.com/Fox2Code/FoxLoader) installed.
