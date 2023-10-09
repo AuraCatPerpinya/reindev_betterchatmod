@@ -25,7 +25,7 @@ What does it currently do:
 
 - New in 1.1.0: You can use the "home" and the "end" keys to move the cursor at the extremities of the chat text field
 
-- New in 1.2.0:
+- Coming soon in 1.2.0:
 
   - Json-based config system. ([How to configure?](#how-to-configure))
   - Ctrl+backspace/delete to delete a whole word or chunk of characters.
