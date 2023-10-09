@@ -5,14 +5,15 @@ import com.fox2code.foxloader.loader.Mod;
 
 import java.util.HashMap;
 
+@SuppressWarnings("RedundantMethodOverride")
 public class BetterChatMod extends Mod {
     public HashMap<String, ModCompatHook> modCompatHooks = new HashMap<>();
 
     public void initializeModCompatHooks() {
         Utils.log("Initializing mod compatibility hooks");
-        modCompatHooks.forEach((string, modCompatHook) -> {
-            modCompatHook.initialize();
-        });
+        modCompatHooks.forEach(
+                (string, modCompatHook) -> modCompatHook.initialize()
+        );
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.fox2code.foxloader.loader.ClientMod;
 
 import java.io.IOException;
 
+@SuppressWarnings("unused")
 public class BetterChatModClient extends BetterChatMod implements ClientMod {
     public void addModCompatHooks() {
         ModCompatCommandAutocomplete compatCommandAutocomplete = new ModCompatCommandAutocomplete();

@@ -22,6 +22,7 @@ public class Utils {
         System.out.println("[BetterChatMod] " + text);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static <T> T ensureDefaultValues(T object, Object defaultObject)
             throws NoSuchFieldException, IllegalAccessException {
 
@@ -30,8 +31,7 @@ public class Utils {
         
         Field[] objectFields = objectClass.getDeclaredFields();
 
-        for (int i = 0; i < objectFields.length; i++) {
-            Field field = objectFields[i];
+        for (Field field : objectFields) {
             boolean isPrivate = false;
             if (!field.isAccessible()) {
                 isPrivate = true;
@@ -51,7 +51,7 @@ public class Utils {
                 field.setAccessible(false);
             }
         }
-        
+
         return object;
     }
 }
