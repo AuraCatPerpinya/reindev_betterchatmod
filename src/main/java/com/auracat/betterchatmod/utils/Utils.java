@@ -1,4 +1,4 @@
-package com.auracat.betterchatmod;
+package com.auracat.betterchatmod.utils;
 
 import java.io.IOException;
 import java.io.Reader;

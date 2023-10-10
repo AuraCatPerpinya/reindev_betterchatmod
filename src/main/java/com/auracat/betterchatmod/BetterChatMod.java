@@ -1,6 +1,7 @@
 package com.auracat.betterchatmod;
 
 import com.auracat.betterchatmod.modcompat.ModCompatHook;
+import com.auracat.betterchatmod.utils.Utils;
 import com.fox2code.foxloader.loader.Mod;
 
 import java.util.HashMap;

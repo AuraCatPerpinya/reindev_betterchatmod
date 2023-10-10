@@ -3,6 +3,7 @@ package com.auracat.betterchatmod.client.mixins;
 import com.auracat.betterchatmod.client.BetterChatModClient;
 import com.auracat.betterchatmod.client.config.ClientConfigManager;
 import com.auracat.betterchatmod.client.messagehistory.MessageHistory;
+import com.auracat.betterchatmod.client.utils.LeavingWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.game.entity.player.EntityPlayer;
 import net.minecraft.src.game.level.World;
@@ -17,7 +18,10 @@ import java.util.stream.Collectors;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft implements Runnable {
-    @Shadow public abstract boolean lineIsCommand(String arg1);
+    @Shadow
+    public static Minecraft getInstance() {
+        return null;
+    }
 
     @Inject(method = "startGame", at = @At(value = "RETURN"))
     public void onStartGame(CallbackInfo ci) {
@@ -25,34 +29,9 @@ public abstract class MixinMinecraft implements Runnable {
 
     @Inject(method = "changeWorld", at = @At(value = "HEAD"))
     public void onChangeWorld(World world, String arg2, EntityPlayer player, CallbackInfo ci) {
+        Minecraft minecraft = getInstance();
         if (world == null) {
-            MessageHistory messageHistory = BetterChatModClient.getMessageHistory();
-            List<String> msgHistoryList = messageHistory.getList();
-
-            assert ClientConfigManager.getConfig() != null;
-            switch (ClientConfigManager.getConfig().messageHistoryIsPerWorld) {
-                case NO:
-                    break;
-                case ONLY_COMMANDS:
-                    List<String> collectOnlyCommands = msgHistoryList
-                            .stream()
-                            .filter(this::lineIsCommand)
-                            .collect(Collectors.toList());
-                    messageHistory.setList(collectOnlyCommands);
-                    break;
-                case ONLY_NORMAL_MSGS:
-                    List<String> collectOnlyNormalMsgs = messageHistory.getList()
-                            .stream()
-                            .filter((message) -> !(this.lineIsCommand(message)))
-                            .collect(Collectors.toList());
-                    messageHistory.setList(collectOnlyNormalMsgs);
-                    break;
-                case YES:
-                    msgHistoryList.clear();
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + ClientConfigManager.getConfig().messageHistoryIsPerWorld);
-            }
+            LeavingWorld.filterMessageHistory(minecraft);
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.auracat.betterchatmod.modcompat;
 
-import com.auracat.betterchatmod.Utils;
+import com.auracat.betterchatmod.utils.Utils;
 import com.fox2code.foxloader.loader.ModContainer;
 
 public interface ModCompatHook {
