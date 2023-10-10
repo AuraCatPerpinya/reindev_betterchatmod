@@ -38,7 +38,7 @@ public class HandleChatInput {
                 }
                 currentMsgCursorIndex = msgHistoryCursor.incrementIndex();
                 if (currentMsgCursorIndex >= msgHistoryList.size()) {
-                    currentMsgCursorIndex = msgHistoryList.size() - 1;
+                    currentMsgCursorIndex = msgHistoryCursor.setIndex(msgHistoryList.size() - 1);
                 }
 
                 if (currentMsgCursorIndex != originalMsgCursorIndex) {
@@ -49,7 +49,7 @@ public class HandleChatInput {
                 currentMsgCursorIndex = msgHistoryCursor.decrementIndex();
 
                 if (currentMsgCursorIndex < -1) {
-                    currentMsgCursorIndex = msgHistoryCursor.incrementIndex();
+                    currentMsgCursorIndex = msgHistoryCursor.setIndex(-1);
                 }
 
                 //noinspection StatementWithEmptyBody
