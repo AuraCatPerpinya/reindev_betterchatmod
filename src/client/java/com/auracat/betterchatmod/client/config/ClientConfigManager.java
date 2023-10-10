@@ -27,6 +27,9 @@ public class ClientConfigManager extends ConfigManager {
                 defaultConfig
         );
 
+        if (config == null) {
+            config = defaultConfig;
+        }
         try {
             Utils.ensureDefaultValues(config, defaultConfig);
             Utils.ensureDefaultValues(config.textSeparators, new TextSeparators());
