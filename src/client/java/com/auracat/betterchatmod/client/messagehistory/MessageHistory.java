@@ -39,8 +39,9 @@ public class MessageHistory {
         Stream<String> stream = msgHistoryList.stream();
 
         assert ClientConfigManager.getConfig() != null;
-        switch (ClientConfigManager.getConfig().messageHistoryIsPerWorld) {
+        switch (ClientConfigManager.getConfig().conserveMessageHistoryBetweenWorlds) {
             case NO:
+                msgHistoryList.clear();
                 break;
             case ONLY_COMMANDS:
                 List<String> collectOnlyCommands = stream
@@ -55,10 +56,9 @@ public class MessageHistory {
                 messageHistory.setList(collectOnlyNormalMsgs);
                 break;
             case YES:
-                msgHistoryList.clear();
                 break;
             default:
-                throw new IllegalStateException("Unexpected value: " + ClientConfigManager.getConfig().messageHistoryIsPerWorld);
+                throw new IllegalStateException("Unexpected value: " + ClientConfigManager.getConfig().conserveMessageHistoryBetweenWorlds);
         }
     }
 }
