@@ -16,7 +16,6 @@ public class HandleChatInput {
             CallbackInfo ci
     ) {
         if (textField.isEnabled && textField.isFocused) {
-            String textFieldCurrentText = textField.getText();
             MessageHistory messageHistory = BetterChatModClient.getMessageHistory();
             List<String> msgHistoryList = messageHistory.getList();
             MessageHistoryCursor msgHistoryCursor = BetterChatModClient.getMessageHistoryCursor();
@@ -29,17 +28,17 @@ public class HandleChatInput {
             } else if (eventKey == Keyboard.KEY_RETURN) {
                 currentMsgCursorIndex = msgHistoryCursor.setIndex(-1);
 
-                String trimmedCurrentText = textFieldCurrentText.trim();
+                String trimmedCurrentText = textField.getText().trim();
                 if (trimmedCurrentText.length() > 0) {
                     messageHistory.addMessage(trimmedCurrentText);
                 }
             } else if (eventKey == Keyboard.KEY_UP) {
                 if (currentMsgCursorIndex == -1) {
-                    msgHistoryCursor.setOriginallyTyped(textFieldCurrentText);
+                    msgHistoryCursor.setOriginallyTyped(textField.getText());
                 }
                 currentMsgCursorIndex = msgHistoryCursor.incrementIndex();
                 if (currentMsgCursorIndex >= msgHistoryList.size()) {
-                    currentMsgCursorIndex = msgHistoryCursor.decrementIndex();
+                    currentMsgCursorIndex = msgHistoryList.size() - 1;
                 }
 
                 if (currentMsgCursorIndex != originalMsgCursorIndex) {
@@ -63,11 +62,11 @@ public class HandleChatInput {
             } else if (eventKey == Keyboard.KEY_HOME) {
                 textField.setCursorPosition(0);
             } else if (eventKey == Keyboard.KEY_END) {
-                textField.setCursorPosition(textFieldCurrentText.length());
+                textField.setCursorPosition(textField.getText().length());
             }
 
             if (currentMsgCursorIndex != originalMsgCursorIndex) {
-                textField.setCursorPosition(textFieldCurrentText.length());
+                textField.setCursorPosition(textField.getText().length());
             }
 
             if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
@@ -87,24 +86,23 @@ public class HandleChatInput {
             int eventKey,
             CallbackInfo ci
     ) {
-            String textFieldCurrentText = textField.getText();
             int currentCursorPosition = textField.cursorPosition;
 
             if (eventKey == Keyboard.KEY_BACK) {
                 // Deletes a group of characters (typically a word) backwards, from right to left
-                if (textFieldCurrentText.length() > 0) {
+                if (textField.getText().length() > 0) {
                     int textSeparatorIndex = ClientUtils.searchNextTextSeparator(
                             -1,
                             currentCursorPosition,
-                            textFieldCurrentText
+                            textField.getText()
                     );
                     if (textSeparatorIndex > 0) {
                         textSeparatorIndex++;
                     }
 
-                    String newText = textFieldCurrentText.substring(0, textSeparatorIndex);
-                    if (currentCursorPosition < textFieldCurrentText.length()) {
-                        newText = newText + textFieldCurrentText.substring(currentCursorPosition);
+                    String newText = textField.getText().substring(0, textSeparatorIndex);
+                    if (currentCursorPosition < textField.getText().length()) {
+                        newText = newText + textField.getText().substring(currentCursorPosition);
                     }
 
                     textField.setText(newText);
@@ -116,12 +114,12 @@ public class HandleChatInput {
                 int textSeparatorIndex = ClientUtils.searchNextTextSeparator(
                         1,
                         currentCursorPosition,
-                        textFieldCurrentText
+                        textField.getText()
                 );
 
-                String newText = textFieldCurrentText.substring(0, currentCursorPosition);
-                if (textSeparatorIndex < textFieldCurrentText.length()) {
-                    newText = newText + textFieldCurrentText.substring(textSeparatorIndex);
+                String newText = textField.getText().substring(0, currentCursorPosition);
+                if (textSeparatorIndex < textField.getText().length()) {
+                    newText = newText + textField.getText().substring(textSeparatorIndex);
                 }
 
                 textField.setText(newText);
@@ -129,11 +127,11 @@ public class HandleChatInput {
 
             if (eventKey == Keyboard.KEY_LEFT) {
                 // Moves the cursor to the next text separator at its left
-                if (textFieldCurrentText.length() > 0) {
+                if (textField.getText().length() > 0) {
                     int textSeparatorIndex = ClientUtils.searchNextTextSeparator(
                             -1,
                             currentCursorPosition,
-                            textFieldCurrentText
+                            textField.getText()
                     );
                     if (textSeparatorIndex > 0) {
                         textSeparatorIndex++;
@@ -146,7 +144,7 @@ public class HandleChatInput {
                 int textSeparatorIndex = ClientUtils.searchNextTextSeparator(
                         1,
                         currentCursorPosition,
-                        textFieldCurrentText
+                        textField.getText()
                 );
 
                 textField.setCursorPosition(textSeparatorIndex);
