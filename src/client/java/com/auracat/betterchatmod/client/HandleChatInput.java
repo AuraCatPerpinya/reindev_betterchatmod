@@ -1,6 +1,5 @@
-package com.auracat.betterchatmod.client.utils;
+package com.auracat.betterchatmod.client;
 
-import com.auracat.betterchatmod.client.BetterChatModClient;
 import com.auracat.betterchatmod.client.messagehistory.MessageHistory;
 import com.auracat.betterchatmod.client.messagehistory.MessageHistoryCursor;
 import net.minecraft.src.client.gui.GuiTextField;

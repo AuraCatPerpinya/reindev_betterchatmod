@@ -1,4 +1,4 @@
-package com.auracat.betterchatmod.client.utils;
+package com.auracat.betterchatmod.client;
 
 import com.auracat.betterchatmod.client.config.ClientConfigManager;
 import com.auracat.betterchatmod.client.config.TextSeparators;

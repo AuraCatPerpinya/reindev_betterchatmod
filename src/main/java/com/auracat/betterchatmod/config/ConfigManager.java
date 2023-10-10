@@ -1,6 +1,6 @@
 package com.auracat.betterchatmod.config;
 
-import com.auracat.betterchatmod.utils.Utils;
+import com.auracat.betterchatmod.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.Nullable;
