@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 public class ConfigManager {
     @Nullable
     public static Path configFolderPath = null;
-    public static Gson gson = new GsonBuilder()
+    public static final Gson gson = new GsonBuilder()
             .serializeNulls()
             .setPrettyPrinting()
             .create();
@@ -80,6 +80,7 @@ public class ConfigManager {
         Files.move(tempFile.toPath(), file.toPath());
     }
 
+    @SuppressWarnings({"unused", "RedundantThrows"})
     public static void initialize() throws IOException {
         Utils.methodNotImplemented();
     }

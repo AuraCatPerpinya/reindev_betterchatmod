@@ -4,8 +4,10 @@ import com.auracat.betterchatmod.utils.Utils;
 import com.fox2code.foxloader.loader.ModContainer;
 
 public interface ModCompatHook {
+    @SuppressWarnings("unused")
     boolean isModPresent();
     String getModId();
+    @SuppressWarnings("unused")
     ModContainer getModContainer();
 
     default void initialize() {

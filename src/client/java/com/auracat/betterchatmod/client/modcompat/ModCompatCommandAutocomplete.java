@@ -5,8 +5,9 @@ import com.fox2code.foxloader.loader.ModContainer;
 import com.fox2code.foxloader.loader.ModLoader;
 
 public class ModCompatCommandAutocomplete implements ModCompatHook {
-    String modId = "jelliedautocomplete";
+    final String modId = "jelliedautocomplete";
 
+    @SuppressWarnings("unused")
     @Override
     public boolean isModPresent() {
         return this.getModContainer() != null;

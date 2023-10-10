@@ -4,8 +4,6 @@
   "package": "com.auracat.betterchatmod.client.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinEntityClientPlayerMP",
-    "MixinEntityPlayerSP",
     "MixinGuiChat",
     "MixinGuiIngame",
     "MixinMinecraft"

@@ -84,7 +84,7 @@ public class HandleChatInput {
 
     public static void handleCtrlCombinations(
             GuiTextField textField,
-            char eventChar,
+            char ignoredEventChar,
             int eventKey,
             CallbackInfo ci
     ) {

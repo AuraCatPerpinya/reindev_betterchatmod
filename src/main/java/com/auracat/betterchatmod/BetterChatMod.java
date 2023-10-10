@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 @SuppressWarnings("RedundantMethodOverride")
 public class BetterChatMod extends Mod {
-    public HashMap<String, ModCompatHook> modCompatHooks = new HashMap<>();
+    public final HashMap<String, ModCompatHook> modCompatHooks = new HashMap<>();
 
     public void initializeModCompatHooks() {
         Utils.log("Initializing mod compatibility hooks");

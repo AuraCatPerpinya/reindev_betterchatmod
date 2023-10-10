@@ -18,7 +18,7 @@ What does it currently do:
   Basically the feature that you have in modern Minecraft,
   with the up and down keys to navigate through your past sent messages & commands.
 
-  By default it is global in 1.1.0 and prior.
+  By default, it is global in 1.1.0 and prior.
   
   In 1.2.0+ it will be per world/server, but you will be able to change that
   (Cf. the "[How to configure?](#how-to-configure)" section).
