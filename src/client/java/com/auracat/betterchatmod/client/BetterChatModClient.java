@@ -1,7 +1,7 @@
 package com.auracat.betterchatmod.client;
 
 import com.auracat.betterchatmod.BetterChatMod;
-import com.auracat.betterchatmod.utils.Utils;
+import com.auracat.betterchatmod.Utils;
 import com.auracat.betterchatmod.client.config.ClientConfigManager;
 import com.auracat.betterchatmod.client.messagehistory.MessageHistory;
 import com.auracat.betterchatmod.client.messagehistory.MessageHistoryCursor;

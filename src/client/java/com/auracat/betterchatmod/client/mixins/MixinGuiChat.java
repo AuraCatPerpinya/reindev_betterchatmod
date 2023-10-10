@@ -1,6 +1,6 @@
 package com.auracat.betterchatmod.client.mixins;
 
-import com.auracat.betterchatmod.client.utils.HandleChatInput;
+import com.auracat.betterchatmod.client.HandleChatInput;
 import net.minecraft.src.client.gui.GuiChat;
 import net.minecraft.src.client.gui.GuiScreen;
 import net.minecraft.src.client.gui.GuiTextField;
