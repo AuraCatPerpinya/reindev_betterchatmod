@@ -6,5 +6,5 @@ public class ClientConfig extends Config {
     public Integer maxSizeChatMessageList = 1024;
     public Integer maxSizeMessageHistory = 1024;
     public TextSeparators textSeparators = new TextSeparators();
-    public ConserveMessageHistoryBetweenWorlds conserveMessageHistoryBetweenWorlds = ConserveMessageHistoryBetweenWorlds.YES;
+    public ConserveMessageHistoryBetweenWorlds conserveMessageHistoryBetweenWorlds = ConserveMessageHistoryBetweenWorlds.NO;
 }
